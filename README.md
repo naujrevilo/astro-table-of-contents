@@ -5,22 +5,25 @@ Un componente reutilizable de Tabla de Contenido (TOC) para proyectos Astro, con
 ## Instalación
 
 ```bash
-npm install @olliebyte/astro-table-of-contents
+npm install @naujrevilo/astro-toc
 # o
-pnpm add @olliebyte/astro-table-of-contents
+pnpm add @naujrevilo/astro-toc
 # o
-yarn add @olliebyte/astro-table-of-contents
+yarn add @naujrevilo/astro-toc
 ```
 
 ## Uso Básico
 
 ```astro
 ---
-import TableOfContents from '@olliebyte/astro-table-of-contents';
+import TableOfContents from '@naujrevilo/astro-toc';
 import { getCollection } from 'astro:content';
 
 // Obtener headings del contenido
-const { headings } = await getCollection('docs');
+// Para documentos
+const { headings: docHeadings } = await getCollection('docs');
+// Para posts
+const { headings: postHeadings } = await getCollection('blog');
 ---
 
 <TableOfContents headings={headings} />
@@ -70,7 +73,7 @@ Puedes personalizar los estilos usando las siguientes clases CSS:
 
 ```astro
 ---
-import TableOfContents from '@tu-usuario/astro-table-of-contents';
+import TableOfContents from '@olliebyte/astro-toc';
 
 const headings = [
   { depth: 2, slug: 'introduccion', text: 'Introducción' },
