@@ -1,0 +1,37 @@
+{
+  "name": "@olliebyte/astro-table-of-contents",
+  "version": "1.0.0",
+  "description": "Componente reutilizable de Tabla de Contenido para Astro con seguimiento de progreso",
+  "main": "TableOfContents.astro",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "astro",
+    "astro-component",
+    "table-of-contents",
+    "toc",
+    "progress"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "peerDependencies": {
+    "astro": ">=3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/astro-table-of-contents.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tu-usuario/astro-table-of-contents/issues"
+  },
+  "homepage": "https://github.com/tu-usuario/astro-table-of-contents#readme",
+  "files": [
+    "TableOfContents.astro",
+    "README.md"
+  ]
+}
