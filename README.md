@@ -14,19 +14,33 @@ yarn add @olliebyte/astro-toc@1.0.1
 
 ## Uso Básico
 
+### Con headings manuales
 ```astro
 ---
 import TableOfContents from '@olliebyte/astro-toc';
-import { getCollection } from 'astro:content';
 
-// Obtener headings del contenido
-// Para documentos
-const { headings: docHeadings } = await getCollection('docs');
-// Para posts
-const { headings: postHeadings } = await getCollection('blog');
+const headings = [
+  { depth: 2, slug: 'introduccion', text: 'Introducción' },
+  { depth: 3, slug: 'instalacion', text: 'Instalación' },
+  { depth: 2, slug: 'uso', text: 'Uso' }
+];
 ---
 
 <TableOfContents headings={headings} />
+```
+
+### Detección automática (requiere headings con id en el mismo archivo)
+```astro
+---
+import TableOfContents from '@olliebyte/astro-toc';
+---
+
+<!-- Los headings deben tener id para ser detectados -->
+<h2 id="introduccion">Introducción</h2>
+<h3 id="instalacion">Instalación</h3>
+<h2 id="uso">Uso</h2>
+
+<TableOfContents />
 ```
 
 ## Props

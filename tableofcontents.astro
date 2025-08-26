@@ -35,13 +35,33 @@ try {
 const { headings, title, showProgress, sticky } = validatedProps
 
 // Procesar headings
-const processedHeadings = headings
-  .filter(({ depth }) => depth >= 1 && depth <= 6)
-  .map((heading, index) => ({
-    ...heading,
-    number: `${index + 1}.`,
-    isSubheading: heading.depth >= 3
-  }))
+let processedHeadings = []
+
+// Si no se proporcionan headings, detectarlos automáticamente del documento
+if (!headings || headings.length === 0) {
+  const docHeadings = Array.from(document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'))
+    .map(heading => ({
+      depth: parseInt(heading.tagName.substring(1)),
+      slug: heading.id,
+      text: heading.textContent || ''
+    }));
+  
+  processedHeadings = docHeadings
+    .filter(({ depth }) => depth >= 1 && depth <= 6)
+    .map((heading, index) => ({
+      ...heading,
+      number: `${index + 1}.`,
+      isSubheading: heading.depth >= 3
+    }));
+} else {
+  processedHeadings = headings
+    .filter(({ depth }) => depth >= 1 && depth <= 6)
+    .map((heading, index) => ({
+      ...heading,
+      number: `${index + 1}.`,
+      isSubheading: heading.depth >= 3
+    }));
+}
 ---
 
 <div class={`bg-surface-50 dark:bg-surface-800 p-6 rounded-lg border border-surface-200 dark:border-surface-700 ${sticky ? 'sticky top-8' : ''}`}>
@@ -125,15 +145,20 @@ const processedHeadings = headings
       headings: headings.length
     });
 
-    if (!progressElements.length || !progressBars.length || !tocLinks.length || !headings.length) {
+    if (!progressElements.length || !progressBars.length || !tocLinks.length) {
       console.error('TOC: Error - Elementos requeridos no encontrados:', {
         progressElements: progressElements.length,
         progressBars: progressBars.length,
         tocLinks: tocLinks.length,
-        headings: headings.length
       });
       window.__tocInitialized = false;
       return;
+    }
+    
+    // Si no hay headings, intentar detectarlos automáticamente
+    if (!headings.length) {
+      headings = Array.from(document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'));
+      console.log('TOC: Headings detectados automáticamente:', headings.length);
     }
 
     // Estado actual
