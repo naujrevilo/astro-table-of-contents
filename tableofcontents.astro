@@ -116,7 +116,7 @@ if (!headings || headings.length === 0) {
   </nav>
 </div>
 
-<script is:inline>
+<script client:load>
   // Función para inicializar TOC una sola vez 
   function initTOC() {
     // Evitar múltiples inicializaciones
@@ -136,7 +136,7 @@ if (!headings || headings.length === 0) {
     const progressElements = document.querySelectorAll('.reading-progress');
     const progressBars = document.querySelectorAll('.progress-bar');
     const tocLinks = document.querySelectorAll('.toc-link');
-    const headings = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
+    let headings = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
 
     console.log('TOC: Elementos encontrados:', {
       progressElements: progressElements.length,

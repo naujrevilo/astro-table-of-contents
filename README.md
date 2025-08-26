@@ -43,6 +43,9 @@ import TableOfContents from '@olliebyte/astro-toc';
 <TableOfContents />
 ```
 
+### Compatibilidad con SSR
+El componente es totalmente compatible con Server-Side Rendering (SSR) en Astro. La lógica del cliente se carga automáticamente solo en el navegador gracias al uso de `client:load`.
+
 ## Props
 
 | Prop | Tipo | Requerido | Default | Descripción |
