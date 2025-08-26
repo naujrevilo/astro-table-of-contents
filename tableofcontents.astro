@@ -34,26 +34,19 @@ try {
 
 const { headings, title, showProgress, sticky } = validatedProps
 
-// Procesar headings
-let processedHeadings = []
-
-// Si no se proporcionan headings, detectarlos automáticamente del documento
-if (!headings || headings.length === 0) {
-  const docHeadings = Array.from(document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'))
-    .map(heading => ({
-      depth: parseInt(heading.tagName.substring(1)),
-      slug: heading.id,
-      text: heading.textContent || ''
-    }));
-  
-  processedHeadings = docHeadings
+// Procesar headings iniciales
+let processedHeadings = headings
+  ? headings
     .filter(({ depth }) => depth >= 1 && depth <= 6)
     .map((heading, index) => ({
       ...heading,
       number: `${index + 1}.`,
       isSubheading: heading.depth >= 3
-    }));
-} else {
+    }))
+  : []
+
+// Inicialmente procesar los headings proporcionados como props
+if (headings && headings.length > 0) {
   processedHeadings = headings
     .filter(({ depth }) => depth >= 1 && depth <= 6)
     .map((heading, index) => ({
@@ -136,7 +129,45 @@ if (!headings || headings.length === 0) {
     const progressElements = document.querySelectorAll('.reading-progress');
     const progressBars = document.querySelectorAll('.progress-bar');
     const tocLinks = document.querySelectorAll('.toc-link');
+    const tocNav = document.querySelector('.toc-nav ol');
     let headings = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
+    
+    // Si no hay headings en el DOM y no hay elementos en el TOC, intentar detectar headings
+    if (!headings.length && tocLinks.length === 0) {
+      headings = Array.from(document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'));
+      
+      if (headings.length) {
+        // Crear elementos del TOC dinámicamente
+        const processedHeadings = headings
+          .map(heading => ({
+            depth: parseInt(heading.tagName.substring(1)),
+            slug: heading.id,
+            text: heading.textContent || ''
+          }))
+          .filter(({ depth }) => depth >= 1 && depth <= 6)
+          .map((heading, index) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `#${heading.slug}`;
+            a.dataset.headingId = heading.slug;
+            a.className = `toc-link block py-2 px-3 rounded-md transition-all duration-200 ${heading.depth >= 3 ? 'ml-6 text-xs text-surface-600 dark:text-surface-400 border-l-2 border-surface-200 dark:border-surface-700 pl-3' : 'text-surface-700 dark:text-surface-200 font-medium'} hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-tertiary-700 dark:hover:text-tertiary-300 hover:no-underline`;
+            
+            a.innerHTML = `
+              <span class='toc-number text-surface-400 dark:text-tertiary-500 mr-2 font-mono text-xs'>
+                ${index + 1}.
+              </span>
+              <span class='toc-text'>${heading.text}</span>
+            `;
+            
+            li.appendChild(a);
+            tocNav?.appendChild(li);
+            return heading;
+          });
+        
+        // Actualizar la lista de tocLinks
+        tocLinks = document.querySelectorAll('.toc-link');
+      }
+    }
 
     console.log('TOC: Elementos encontrados:', {
       progressElements: progressElements.length,

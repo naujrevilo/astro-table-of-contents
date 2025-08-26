@@ -1,6 +1,6 @@
 {
   "name": "@olliebyte/astro-toc",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Componente reutilizable de Tabla de Contenido para Astro con seguimiento de progreso",
   "main": "TableOfContents.astro",
   "type": "module",
