@@ -36,11 +36,11 @@ const { headings, title, showProgress, sticky } = validatedProps
 
 // Procesar headings
 const processedHeadings = headings
-  .filter(({ depth }) => depth > 1 && depth < 4)
+  .filter(({ depth }) => depth >= 1 && depth <= 6)
   .map((heading, index) => ({
     ...heading,
     number: `${index + 1}.`,
-    isSubheading: heading.depth === 3
+    isSubheading: heading.depth >= 3
   }))
 ---
 
@@ -108,7 +108,7 @@ const processedHeadings = headings
     // Configuración del observador de intersección
     const observerOptions = {
       root: null,
-      rootMargin: '-10% 0px -80% 0px',
+      rootMargin: '-20% 0px -50% 0px',
       threshold: 0.1
     };
 
@@ -116,7 +116,7 @@ const processedHeadings = headings
     const progressElements = document.querySelectorAll('.reading-progress');
     const progressBars = document.querySelectorAll('.progress-bar');
     const tocLinks = document.querySelectorAll('.toc-link');
-    const headings = document.querySelectorAll('h2[id], h3[id]');
+    const headings = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
 
     console.log('TOC: Elementos encontrados:', {
       progressElements: progressElements.length,
@@ -126,7 +126,12 @@ const processedHeadings = headings
     });
 
     if (!progressElements.length || !progressBars.length || !tocLinks.length || !headings.length) {
-      console.log('TOC: Elementos insuficientes, cancelando inicialización');
+      console.error('TOC: Error - Elementos requeridos no encontrados:', {
+        progressElements: progressElements.length,
+        progressBars: progressBars.length,
+        tocLinks: tocLinks.length,
+        headings: headings.length
+      });
       window.__tocInitialized = false;
       return;
     }
@@ -230,10 +235,12 @@ const processedHeadings = headings
       }
     }, observerOptions);
 
-    // Observar todos los headings
+    // Observar todos los headings válidos (con ID)
     headings.forEach(function(heading) {
-      if (heading) {
+      if (heading && heading.id) {
         observer.observe(heading);
+      } else {
+        console.warn('TOC: Heading sin ID ignorado:', heading);
       }
     });
 
