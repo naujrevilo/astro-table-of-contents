@@ -1,8 +1,8 @@
 {
   "name": "@olliebyte/astro-toc",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Componente reutilizable de Tabla de Contenido para Astro con seguimiento de progreso",
-  "main": "TableOfContents.astro",
+  "main": "tableofcontents.astro",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,7 +20,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "astro": "5.13"
+    "astro": "^5.0.0"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/naujrevilo/astro-table-of-contents#readme",
   "files": [
-    "TableOfContents.astro",
+    "tableofcontents.astro",
     "README.md"
   ]
 }

@@ -45,15 +45,9 @@ let processedHeadings = headings
     }))
   : []
 
-// Inicialmente procesar los headings proporcionados como props
-if (headings && headings.length > 0) {
-  processedHeadings = headings
-    .filter(({ depth }) => depth >= 1 && depth <= 6)
-    .map((heading, index) => ({
-      ...heading,
-      number: `${index + 1}.`,
-      isSubheading: heading.depth >= 3
-    }));
+// Validar que tenemos headings procesados
+if (processedHeadings.length === 0) {
+  console.warn('TableOfContents: No se encontraron encabezados válidos para procesar')
 }
 ---
 
@@ -78,7 +72,7 @@ if (headings && headings.length > 0) {
     </div>
   )}
   
-  <nav class='toc-nav'>
+  <nav class='toc-nav' aria-labelledby='table-of-contents-title'>
     <ol role='list' class='space-y-1 text-sm'>
       {
         processedHeadings.map((heading) => (
@@ -86,6 +80,7 @@ if (headings && headings.length > 0) {
             <a 
               href={`#${heading.slug}`}
               data-heading-id={heading.slug}
+              aria-label={`Ir a sección: ${heading.text}`}
               class={`
                 toc-link block py-2 px-3 rounded-md transition-all duration-200 
                 ${heading.isSubheading 
@@ -96,8 +91,9 @@ if (headings && headings.length > 0) {
                 hover:text-tertiary-700 dark:hover:text-tertiary-300
                 hover:no-underline
               `}
+              role="link"
             >
-              <span class='toc-number text-surface-400 dark:text-tertiary-500 mr-2 font-mono text-xs'>
+              <span class='toc-number text-surface-400 dark:text-tertiary-500 mr-2 font-mono text-xs' aria-hidden="true">
                 {heading.number}
               </span>
               <span class='toc-text'>{heading.text}</span>
@@ -195,25 +191,30 @@ if (headings && headings.length > 0) {
     // Estado actual
     let currentActiveId = '';
     
-    // Función para actualizar el progreso de lectura
-    function updateReadingProgress() {
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight - windowHeight;
-      const scrolled = window.scrollY;
-      const progress = Math.min(Math.max(scrolled / documentHeight, 0), 1);
-      const progressPercentage = Math.round(progress * 100);
+    // Función para actualizar el progreso de lectura con throttling
+      let lastUpdateTime = 0;
+      const throttleDelay = 100; // ms entre actualizaciones
       
-      console.log('TOC: Progreso actualizado:', { scrolled, documentHeight, progress, progressPercentage });
-      
-      // Actualizar todos los elementos de progreso
-      progressElements.forEach(element => {
-        element.textContent = progressPercentage;
-      });
-      
-      progressBars.forEach(bar => {
-        bar.style.width = progressPercentage + '%';
-      });
-    }
+      function updateReadingProgress() {
+        const now = Date.now();
+        if (now - lastUpdateTime < throttleDelay) return;
+        lastUpdateTime = now;
+        
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrolled = window.scrollY;
+        const progress = Math.min(Math.max(scrolled / documentHeight, 0), 1);
+        const progressPercentage = Math.round(progress * 100);
+        
+        // Actualizar todos los elementos de progreso
+        progressElements.forEach(element => {
+          element.textContent = progressPercentage;
+        });
+        
+        progressBars.forEach(bar => {
+          bar.style.width = progressPercentage + '%';
+        });
+      }
 
     // Función para activar/desactivar enlaces del TOC
     function setActiveLink(activeId) {

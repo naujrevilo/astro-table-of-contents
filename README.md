@@ -5,11 +5,11 @@ Un componente reutilizable de Tabla de Contenido (TOC) para proyectos Astro, con
 ## Instalación
 
 ```bash
-npm install @olliebyte/astro-toc@1.0.1
+npm install @olliebyte/astro-toc@1.0.5
 # o
-pnpm add @olliebyte/astro-toc@1.0.1
+pnpm add @olliebyte/astro-toc@1.0.5
 # o
-yarn add @olliebyte/astro-toc@1.0.1
+yarn add @olliebyte/astro-toc@1.0.5
 ```
 
 ## Uso Básico
@@ -79,17 +79,34 @@ Puedes personalizar los estilos usando las siguientes clases CSS:
 
 ## Características
 
-- Seguimiento de progreso de lectura
+- Seguimiento de progreso de lectura con optimización de rendimiento
 - Navegación suave entre secciones
 - Soporte para temas claro/oscuro
 - Validación de props con Zod
 - Accesibilidad mejorada (ARIA)
 - Compatible con SSR (Server-Side Rendering)
+- Compatible con Astro 5.0.0 y superiores
+
+## Mejoras de Accesibilidad
+
+El componente incluye las siguientes mejoras de accesibilidad:
+
+- Atributos ARIA para mejorar la experiencia con lectores de pantalla
+- Etiquetas descriptivas para cada enlace de navegación
+- Elementos decorativos marcados como `aria-hidden="true"`
+- Roles semánticos explícitos para mejor compatibilidad
+
+## Optimizaciones de Rendimiento
+
+- Throttling en la función de actualización de progreso para reducir cálculos
+- Manejo eficiente de eventos de scroll
+- Detección inteligente de encabezados visibles
 
 ## Ejemplo Completo
 
 ```astro
-import TableOfContents from '@naujrevilo/astro-toc';
+---
+import TableOfContents from '@olliebyte/astro-toc';
 
 const headings = [
   { depth: 2, slug: 'introduccion', text: 'Introducción' },
@@ -97,6 +114,22 @@ const headings = [
   { depth: 2, slug: 'uso', text: 'Uso' },
 ];
 ---
+
+<TableOfContents 
+  headings={headings}
+  title="Índice"
+  showProgress={true}
+  sticky={false}
+/>
+```
+
+## Contribución
+
+¡Las contribuciones son bienvenidas! Por favor, abre un issue o envía un PR.
+
+## Licencia
+
+MIT
 
 <TableOfContents 
   headings={headings}
